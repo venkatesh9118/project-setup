@@ -1,0 +1,57 @@
+pipeline {
+agent any
+enviornment {
+MONOGB_ URI=credentials('mongodb-uri')
+TOKEN_KEY=credentials('token_key')
+DOCKERHUB_CREDENTIALS=credentials('dockerhub')
+}
+
+stages{
+stage('checkout') {
+steps {
+checkout scm
+}
+}
+stage('install and test client') {
+steps { 
+dir('fronted') {
+sh 'npm install'
+sh 'npm test'
+}
+}
+}
+stage ('install and test server') {
+steps {
+dir('backend') {
+sh 'npm install '
+sh """
+export MONGODB_URI=$MONGODB_URI
+export TOKEN_KEY =$TOKEN_KEY
+npm test
+"""
+}
+}
+}
+stage ('build docker Images')
+{
+steps{
+sh 'docker build -t yourdockerhubuser/mern-front
+sh 'docker bulid -t yourdockerhubusr/mern-backend
+}
+}
+stage('deploy application')
+{
+steps
+{
+sshagent(['your ssh credentials id]) {
+sh ""
+ssh ubunut@your server ip
+docker pull yourdockerhubuser/mern-frontend: latest
+docker pull yourdockerhubuser/mern-backend:latest
+docker-compose -f /path-to-docker-compose/docker-compose.yml up -d
+EOF
+""
+}
+}
+}
+
