@@ -1,3 +1,6 @@
+Backend yml file
+------------------------------------
+
 FROM Node :18 - apline
 WORKDIR /app
 COPY package*.json ./
@@ -5,3 +8,55 @@ Run npm install
 copy  . .
 Expose 5000
 CMD ["npm","start"]
+
+
+
+
+------------------------------------
+
+Frontend Yml file
+------------------------------
+From node :18-alpine as build
+workdir /app
+copy package*.json ./
+Run npm install
+copy ..
+Run npm run Build
+From nginx: alpine
+copy  -- from =build /app/build /usr/share/ngnix/html
+Expose 80
+CMD ["nginx", "-g",daemon off;"]
+----------------------------------------------------
+
+
+Database for Docker compose 
+---------------------------------------
+
+version :' 3.8'
+
+services :
+ mongo:
+  image:momgo
+  restart: always
+  ports:
+   "27017:27017"
+  Volumes:
+   mongo-data:/data/db
+Backend:
+build:./backend
+ports:
+ "5000:5000"
+environment:
+  MONGO_URL=mongodb: //mongo:27017/merntack (yourdbname)
+  JWT_SECRET= your_jwt_secret
+depends_on:
+ mongo
+frontend:
+build: ./frontend
+ports:
+ "3000:8000"
+depends_on:
+ backend
+Volumes 
+mongo-data:
+
