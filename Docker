@@ -1,0 +1,7 @@
+FROM Node :18 - apline
+WORKDIR /app
+COPY package*.json ./
+Run npm install
+copy  . .
+Expose 5000
+CMD ["npm","start"]
